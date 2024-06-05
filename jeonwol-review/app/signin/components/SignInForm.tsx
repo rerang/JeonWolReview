@@ -65,8 +65,9 @@ export default function SignUpForm(props: any) {
         className="w-[150px] h-[50px] bg-color-7 rounded-[8px] text-[#FFFFFF] "
         role="submit"
       >
-        회원가입
+        로그인
       </button>
     </form>
   );
 }
+// 비번 해쉬 https://www.npmjs.com/package/bcryptjs

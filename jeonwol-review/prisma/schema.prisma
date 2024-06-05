@@ -1,3 +1,5 @@
+// db schema push = npx prisma db push
+// ? = optional
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -15,7 +17,14 @@ datasource db {
 
 model user_test {
   idx       Int     @id @default(autoincrement())
-  name      String?
+  name      String
   email     String  @unique
-  image_url String
+  image_url String ?
+}
+
+model review_test {
+  idx       Int     @id @default(autoincrement())
+  user_id Int
+  review_title String
+  review_content String
 }
