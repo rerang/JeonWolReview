@@ -3,6 +3,7 @@ import "../../globals.css";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { checkUser, IUserSignin } from "@/lib/server_logic/user";
 
 let userSchema = yup.object({
   id: yup
@@ -17,11 +18,7 @@ let userSchema = yup.object({
     .string()
     .required("필수요소입니다.")
     .min(8, "비밀번호는 8자리 이상으로 입력하여 주세요.")
-    .max(16, "비밀번호는 16자리 이하로 입력하여 주세요.")
-    .matches(
-      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9])$/,
-      "비밀번호는 영문, 숫자, 특수기호가 모두 포함되어야 합니다."
-    ),
+    .max(16, "비밀번호는 16자리 이하로 입력하여 주세요."),
 });
 
 export default function SignUpForm(props: any) {
@@ -29,7 +26,18 @@ export default function SignUpForm(props: any) {
     resolver: yupResolver(userSchema),
     mode: "onChange",
   });
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = async (data: any) => {
+    const user_signin: IUserSignin = {
+      id: data.id,
+      password: data.pwd,
+    };
+    const checkUserRes = await checkUser(user_signin);
+    if (!checkUserRes.stat) {
+      alert(checkUserRes.msg);
+    }
+    // signin
+    console.log("sign in 하세용");
+  };
 
   return (
     <form

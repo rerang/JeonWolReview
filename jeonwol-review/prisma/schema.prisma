@@ -15,11 +15,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user_test {
+model local_user {
   idx       Int     @id @default(autoincrement())
-  name      String
-  email     String  @unique
-  image_url String ?
+  user_id     String  @unique
+  password    String ?
+  name      String ?
+  phone String ?
 }
 
 model review_test {

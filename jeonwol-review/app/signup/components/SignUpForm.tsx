@@ -3,7 +3,8 @@ import "../../globals.css";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createUser } from "@/lib/server_logic/user";
+import { createUser, IUserSignup } from "@/lib/server_logic/user";
+import { hash } from "bcryptjs";
 
 let userSchema = yup.object({
   id: yup
@@ -28,7 +29,7 @@ let userSchema = yup.object({
     .string()
     .required("필수요소입니다.")
     .matches(/^([a-zA-Zㄱ-ㅎ|ㅏ-ㅣ|가-힣])*/, "이름 형식이 올바르지 않습니다."),
-  phone: yup.number().required("필수요소입니다.").min(6),
+  phone: yup.string().required("필수요소입니다.").min(11),
 });
 
 export default function SignUpForm(props: any) {
@@ -37,9 +38,16 @@ export default function SignUpForm(props: any) {
     mode: "onChange",
   });
   const onSubmit = async (data: any) => {
-    const createUserRes = await createUser();
-    console.log("createuserres", createUserRes);
+    const pwd_hashed = await hash(data.pwd, 10);
+    const user_signup: IUserSignup = {
+      name: data.name,
+      id: data.id,
+      password: pwd_hashed, //10~12 정도가 적당
+      phone: data.phone,
+    };
+    const createUserRes = await createUser(user_signup);
   };
+  // 비번 해쉬 https://www.npmjs.com/package/bcryptjs
 
   return (
     <form
